@@ -7,6 +7,7 @@ import {
   Route,
 } from "react-router-dom";
 import Read from './components/Read';
+import UpdateUser from './components/UpdateUser';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
        <Routes>
         <Route exact path='/' element={<Create/>} />
         <Route exact path='/read' element={<Read/>} />
+        <Route exact path='/update/:id' element={<UpdateUser/>} />
        </Routes>
       </BrowserRouter>
     </div>

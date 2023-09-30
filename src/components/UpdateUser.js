@@ -1,27 +1,34 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createUser } from "../features/userDetailSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateUser } from "../features/userDetailSlice";
 
-function Create() {
-    const [users, setUsers] = useState({});
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+function UpdateUser() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [updateData, setUpdateData] = useState({});
+  const { users } = useSelector((state) => state.user);
 
-    const handleChange = (e) => {
-        setUsers({...users, [e.target.name] : e.target.value});
-        
-    }
-  const handleSubmit = (e) => {
-     e.preventDefault();
-     dispatch(createUser(users));
-     navigate("/read");
-  }
+  useEffect(() => {
+    const singleuserData = users.filter((user) => user?.id === id);
+    setUpdateData(singleuserData[0]);
+  }, []);
+
+  const handleUpdateChange = (e) => {
+    setUpdateData({ ...updateData, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    dispatch(updateUser(updateData));
+    navigate("/read");
+  };
 
   return (
     <div>
-      <h3>Fill the Form </h3>
-      <form onSubmit={handleSubmit}>
+      <h3>Update the details </h3>
+      <form onSubmit={handleUpdate}>
         <div className="w-50 mx-auto">
           <label for="exampleInputEmail1" className="form-label">
             Name
@@ -29,10 +36,10 @@ function Create() {
           <input
             type="text"
             name="name"
+            value={updateData && updateData.name}
             className="form-control"
             aria-describedby="emailHelp"
-            onChange={handleChange}
-           
+            onChange={handleUpdateChange}
           />
         </div>
 
@@ -43,10 +50,11 @@ function Create() {
           <input
             type="email"
             name="email"
+            value={updateData && updateData.email}
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            onChange={handleChange}
+            onChange={handleUpdateChange}
           />
         </div>
         <div className="w-50 mx-auto">
@@ -56,24 +64,25 @@ function Create() {
           <input
             type="number"
             name="age"
+            value={updateData && updateData.age}
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            onChange={handleChange}
+            onChange={handleUpdateChange}
           />
         </div>
         <div className="mb-3">
-            
           <input
             className="form-check-input"
             type="radio"
             name="gender"
             value="Male"
+            checked={updateData && updateData.gender === "Male"}
             id="flexRadioDefault1"
-            onChange={handleChange}
+            onChange={handleUpdateChange}
           />
           <label className="form-check-label" for="flexRadioDefault1">
-          Male
+            Male
           </label>
         </div>
         <div className="mb-3">
@@ -82,9 +91,9 @@ function Create() {
             type="radio"
             name="gender"
             value="Female"
+            checked={updateData && updateData.gender === "Female"}
             id="flexRadioDefault2"
-            onChange={handleChange}
-            
+            onChange={handleUpdateChange}
           />
           <label className="form-check-label" for="flexRadioDefault2">
             Female
@@ -98,4 +107,4 @@ function Create() {
   );
 }
 
-export default Create;
+export default UpdateUser;
